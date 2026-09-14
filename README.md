@@ -1,7 +1,17 @@
 # Interaction Route-Value Bucketing
 
 This repository contains the code and evidence for an interaction-aware dynamic
-layer-skipping study on DeiT. The main pipeline is:
+layer-skipping study on DistilBERT/SST-2 and DeiT/ImageNet. The repository has
+two deliberately separate evidence tracks:
+
+- DistilBERT/SST-2 is the main positive runtime/accuracy study. It includes
+  Early-CLS + multi-label BCE one-shot routing, route bucketing, original ASTER
+  comparisons, and interaction-aware router extensions.
+- DeiT/ImageNet is a controlled 40K/5K protocol with pilot and diagnostic
+  results. It is included to document transfer limitations, not as a complete
+  ImageNet reproduction or a successful vision benchmark.
+
+The interaction-aware pipeline is:
 
 1. train one shared `DynamicAdapter` with randomly sampled complete routes;
 2. train a one-shot route-value router with unary and pairwise layer terms;
@@ -16,6 +26,8 @@ to make a complete evaluation reproducible.
 
 The published DeiT experiment uses the project's 40,000-train/5,000-test
 code-split protocol. This is not a claim of a complete ImageNet-1K reproduction.
+The DistilBERT experiments use the GLUE/SST-2 validation split (872 examples)
+with the model and data supplied locally by the user.
 The included diagnostic is a deterministic 128-image subset and must not be
 reported as a 5,000-image result.
 
@@ -27,6 +39,19 @@ The `results/` directory contains compact summaries copied from the local
 experiment logs. They are evidence snapshots, not model checkpoints.
 
 ## Layout
+
+- `aster-bert/`: selected DistilBERT/ASTER components and benchmark entry
+  points used by the reported BERT experiments.
+- `aster-bert-paper-params-sweep/`: the three target-budget Early-CLS+BCE
+  comparisons and their formal reports.
+- `aster-bert-route-bucket-run/`: batch-1 control and batch-32 route-bucketing
+  benchmark for the Early-CLS+BCE router.
+- `aster-bert-interaction-route-value-run/`: fixed-budget DistilBERT
+  interaction-aware route-value experiment and timing reports.
+- `aster-bert-interaction-multibudget-run/`: shared DistilBERT adapter/router
+  across multiple budgets and timing reports.
+- `aster-bert-random-route-adapter-ablation/`: DistilBERT adapter route-sampling
+  ablation and its formal CSV/Markdown summaries.
 
 - `aster-deit-interaction-route-value-run/`: single-budget pilot router.
 - `aster-deit-interaction-multibudget-run/`: shared adapter/router across
