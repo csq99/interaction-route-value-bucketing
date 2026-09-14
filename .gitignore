@@ -1,0 +1,32 @@
+# Secrets and credentials
+id_ecdsa
+*.pem
+*.key
+
+# Model/data artifacts
+models/
+imagenet-1k/
+hf_cache*/
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.parquet
+checkpoints*/
+data_splits_parquet/
+
+# Runtime outputs
+logs/
+log/
+results_*/
+comparison_results/
+__pycache__/
+*.pyc
+*.out
+*.err
+
+# Local tooling
+.venv/
+.conda/
+.idea/
+.vscode/

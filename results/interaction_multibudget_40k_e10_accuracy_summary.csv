@@ -1,0 +1,4 @@
+target_layers,theoretical_speedup,legal_routes,full_accuracy,dynamic_accuracy,selected_route_count,max_route_share
+4,3.0,45,0.815,0.2602,1,1.0
+6,2.0,210,0.815,0.6106,3,0.5282
+7,1.7142857142857142,252,0.815,0.6984,3,0.9908
