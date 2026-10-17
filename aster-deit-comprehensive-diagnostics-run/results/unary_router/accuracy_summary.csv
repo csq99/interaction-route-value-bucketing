@@ -1,0 +1,4 @@
+samples,full_accuracy,dynamic_accuracy,selected_route_count,max_route_share,target_layers,legal_routes
+5000,0.815,0.2602,1,1.0,4,45
+5000,0.815,0.529,2,0.8894,6,210
+5000,0.815,0.6306,3,0.9942,7,252

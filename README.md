@@ -60,6 +60,20 @@ experiment logs. They are evidence snapshots, not model checkpoints.
   diagnosis against per-image route oracles.
 - `aster-deit-early-cls-bce-run/`: shared DeiT data/model utility modules used
   by the interaction experiments.
+- `aster-deit-comprehensive-diagnostics-run/`: fixed-route quality, oracle,
+  and GPU-forward versus parquet timing diagnostics.
+- `aster-deit-router-collapse-cause-run/`: interaction versus unary-only
+  router collapse comparison.
+- `aster-deit-load-balanced-router-run/`: load-balancing and route-selection
+  rule ablations.
+- `aster-deit-interaction-joint-training-run/`: adapter/router joint-training
+  diagnostic.
+- `aster-deit-interaction-multibudget-40k-e10-to-e15-run/`: extended DeiT
+  adapter/router curve and fixed-route quality reports.
+- `aster-deit-original-aster-40k-e5-to-e15-run/`: original ASTER subset
+  baseline curve.
+- `aster-deit-adapter-sampling-ablation-run/`: completed random-route adapter
+  sampling evidence; incomplete local-edge results are excluded.
 - `results/`: selected accuracy, route-distribution, timing, and diagnostic
   summaries.
 

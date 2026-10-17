@@ -1,0 +1,2 @@
+adapter_epoch,target_layers,samples,legal_routes,full_accuracy,fixed_accuracy_mean,fixed_accuracy_std,fixed_accuracy_min,fixed_accuracy_max,best_fixed_accuracy_route,best_objective,best_objective_route,best_objective_route_accuracy,loss_oracle_accuracy,any_correct_oracle_accuracy
+10,7,1024,252,0.810546875,0.5767376612103174,0.09098744884752728,0.1484375,0.703125,"[0, 2, 5, 6, 8, 9, 11]",2.077468049028539,"[0, 3, 4, 6, 8, 9, 11]",0.69921875,0.9189453125,0.95703125

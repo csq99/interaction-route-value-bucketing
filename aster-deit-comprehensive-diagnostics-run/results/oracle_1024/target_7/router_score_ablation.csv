@@ -1,0 +1,3 @@
+adapter_epoch,target_layers,score_mode,samples,accuracy,mean_objective,loss_oracle_match_share,loss_oracle_mean_score_rank,router_choice_mean_loss_rank,mean_score_vs_negative_loss_pearson,selected_route_count,max_route_share
+10,7,interaction,1024,0.6923828125,2.153824568260461,0.01171875,69.5,70.779296875,0.42711168655660003,3,0.9921875
+10,7,unary_only,1024,0.615234375,2.692055858206004,0.0009765625,86.9697265625,99.783203125,0.3120759082958102,1,1.0

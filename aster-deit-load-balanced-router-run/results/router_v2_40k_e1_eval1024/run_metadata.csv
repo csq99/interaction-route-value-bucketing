@@ -1,0 +1,2 @@
+train_samples,eval_samples,adapter_epoch,router_epochs,routes_per_batch,load_balance_weights,load_prior_smoothing,top1_proxy_temperature,train_seconds_shared_route_loss_pass,reference_router_checkpoint,adapter_checkpoint
+40000,1024,15,1,8,"[0.0, 0.01, 0.1, 1.0]",0.25,0.1,21565.13362690108,/HOME/pxyai/pxyaih_0002/CSQ/ASTER/ASTER-main/aster-deit-interaction-multibudget-40k-e10-to-e15-run/checkpoints_e15/shared_interaction_router.pt,/HOME/pxyai/pxyaih_0002/CSQ/ASTER/ASTER-main/aster-deit-interaction-multibudget-40k-e10-to-e15-run/checkpoints_e15/shared_adapter_epoch_015.pt
