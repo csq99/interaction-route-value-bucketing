@@ -1,113 +1,107 @@
 # Interaction Route-Value Bucketing
 
-This repository contains the code and evidence for an interaction-aware dynamic
-layer-skipping study on DistilBERT/SST-2 and DeiT/ImageNet. The repository has
-two deliberately separate evidence tracks:
+This repository contains the code and evidence for an interaction-aware
+dynamic layer-skipping study on DistilBERT/SST-2 and a controlled DeiT/ImageNet
+subset. It is organized around the evidence used in the paper rather than
+around a single end-to-end training command.
 
-- DistilBERT/SST-2 is the main positive runtime/accuracy study. It includes
-  Early-CLS + multi-label BCE one-shot routing, route bucketing, original ASTER
-  comparisons, and interaction-aware router extensions.
-- DeiT/ImageNet is a controlled 40K/5K protocol with pilot and diagnostic
-  results. It is included to document transfer limitations, not as a complete
-  ImageNet reproduction or a successful vision benchmark.
+## Evidence scope
 
-The interaction-aware pipeline is:
+The repository has two separate tracks:
 
-1. train one shared `DynamicAdapter` with randomly sampled complete routes;
-2. train a one-shot route-value router with unary and pairwise layer terms;
-3. score legal routes from one early hidden-state summary and optionally group
-   samples by route (`route bucketing`) before executing the transformer layers.
+- **DistilBERT/SST-2:** the primary positive study. It evaluates the
+  interaction-aware route-value router, the two-stage adapter/router training
+  protocol, and route-bucketed execution on the 872-example SST-2 validation
+  split.
+- **DeiT/ImageNet subset:** a controlled pilot and diagnostic study using the
+  project split of 40,000 training images and 5,000 evaluation images. It is
+  not a complete ImageNet-1K reproduction and is used to document transfer
+  limitations, adapter/path quality, and route-selection behavior.
 
-The router is trained after the adapter. Adapter quality is therefore measured
-separately from routing quality; the router checkpoint contains both states only
-to make a complete evaluation reproducible.
+The standard Interaction pipeline is:
 
-## Scope and evidence
+1. Train one shared DynamicAdapter with randomly sampled complete routes and
+   budgets.
+2. Freeze the backbone and adapter, then train a one-shot route-value router
+   with unary and pairwise layer terms.
+3. Select a legal ordered route from an early representation and optionally
+   group samples with identical routes into route buckets before execution.
 
-The published DeiT experiment uses the project's 40,000-train/5,000-test
-code-split protocol. This is not a claim of a complete ImageNet-1K reproduction.
-The DistilBERT experiments use the GLUE/SST-2 validation split (872 examples)
-with the model and data supplied locally by the user.
-The included diagnostic is a deterministic 128-image subset and must not be
-reported as a 5,000-image result.
+The DynamicAdapter architecture is inherited from ASTER. The adapter training
+procedure in this repository is separate from router training and should not
+be interpreted as the original ASTER training procedure.
 
-Timing files contain GPU-forward measurements only. Batch-1 latency,
-batch-N throughput, and parquet end-to-end I/O are distinct metrics; no
-end-to-end parquet timing is claimed by the included forward-only benchmark.
+## Directory map
 
-The `results/` directory contains compact summaries copied from the local
-experiment logs. They are evidence snapshots, not model checkpoints.
+### Main Interaction experiments
 
-## Layout
+| Directory | Role in the paper |
+|---|---|
+| `aster-bert-interaction-route-value-run/` | DistilBERT route-value implementation and fixed-budget experiment |
+| `aster-bert-interaction-multibudget-run/` | DistilBERT shared adapter/router checkpoint and timing reports |
+| `aster-deit-interaction-route-value-run/` | DeiT pilot route-value implementation |
+| `aster-deit-interaction-multibudget-run/` | DeiT shared adapter/router training and GPU-forward benchmark |
+| `aster-deit-original-aster-40k-e5-to-e15-run/` | Local original-ASTER DeiT subset comparison curve |
+| `results/` | Selected accuracy, route-distribution, timing, and oracle summaries |
 
-- `aster-bert/`: selected DistilBERT/ASTER components and benchmark entry
-  points used by the reported BERT experiments.
-- `aster-bert-paper-params-sweep/`: the three target-budget Early-CLS+BCE
-  comparisons and their formal reports.
-- `aster-bert-route-bucket-run/`: batch-1 control and batch-32 route-bucketing
-  benchmark for the Early-CLS+BCE router.
-- `aster-bert-interaction-route-value-run/`: fixed-budget DistilBERT
-  interaction-aware route-value experiment and timing reports.
-- `aster-bert-interaction-multibudget-run/`: shared DistilBERT adapter/router
-  across multiple budgets and timing reports.
-- `aster-bert-random-route-adapter-ablation/`: DistilBERT adapter route-sampling
-  ablation and its formal CSV/Markdown summaries.
-- `aster-baseline-methods-comparison-run/`: five-method classification
-  comparison harness and compact DistilBERT/DeiT evidence tables. The
-  SkipDecode and ShortGPT entries are explicitly labelled classification
-  transfer proxies.
+### Diagnostics and controls
 
-- `aster-deit-interaction-route-value-run/`: single-budget pilot router.
-- `aster-deit-interaction-multibudget-run/`: shared adapter/router across
-  4/12, 6/12, and 7/12 budgets, plus the GPU-forward benchmark.
-- `aster-deit-interaction-oracle-diagnostic-run/`: exhaustive route-quality
-  diagnosis against per-image route oracles.
-- `aster-deit-early-cls-bce-run/`: shared DeiT data/model utility modules used
-  by the interaction experiments.
-- `aster-deit-comprehensive-diagnostics-run/`: fixed-route quality, oracle,
-  and GPU-forward versus parquet timing diagnostics.
-- `aster-deit-router-collapse-cause-run/`: interaction versus unary-only
-  router collapse comparison.
-- `aster-deit-load-balanced-router-run/`: load-balancing and route-selection
-  rule ablations.
-- `aster-deit-interaction-joint-training-run/`: adapter/router joint-training
-  diagnostic.
-- `aster-deit-interaction-multibudget-40k-e10-to-e15-run/`: extended DeiT
-  adapter/router curve and fixed-route quality reports.
-- `aster-deit-original-aster-40k-e5-to-e15-run/`: original ASTER subset
-  baseline curve.
-- `aster-deit-adapter-sampling-ablation-run/`: completed random-route adapter
-  sampling evidence; incomplete local-edge results are excluded.
-- `results/`: selected accuracy, route-distribution, timing, and diagnostic
-  summaries.
+| Directory | Role in the paper |
+|---|---|
+| `aster-deit-comprehensive-diagnostics-run/` | Fixed-route quality, oracle, unary-router, and timing diagnostics |
+| `aster-deit-interaction-oracle-diagnostic-run/` | Interaction router oracle diagnostic |
+| `aster-deit-router-collapse-cause-run/` | Router-epoch and route-concentration diagnosis |
+| `aster-deit-load-balanced-router-run/` | Load-balancing and selection-rule diagnostics |
+| `aster-deit-interaction-joint-training-run/` | Separate joint-training diagnostic; not the standard checkpoint |
 
-## Running on the server
+The repository also retains Early-CLS+BCE and adapter-sampling experiments as
+historical or supplementary evidence. They are not substituted for the
+standard Interaction checkpoint in the main results.
 
-The shell scripts contain the server layout used for these experiments. Before
-running, edit the `ROOT`, model, and split paths for your environment, then:
+### Cross-method comparison
 
-```bash
-cd /HOME/pxyai/pxyaih_0002/CSQ/ASTER/ASTER-main/aster-deit-interaction-multibudget-run
-sed -i 's/\r$//' run_shared_multibudget_deit.sh
-chmod +x run_shared_multibudget_deit.sh
-sbatch run_shared_multibudget_deit.sh
-```
+The cross-method table in the paper uses a separate common evaluation harness
+named `aster-baseline-methods-comparison-run/`. That directory is not part of
+this anonymous repository snapshot yet. To make the table's evaluation code
+available from this artifact, add that directory before publishing the final
+artifact link. It evaluates full execution, early-exit, random-skip, SkipDecode
+proxy, and ShortGPT proxy on the supplied DistilBERT and DeiT protocols.
+SkipDecode and ShortGPT are classification-transfer proxies; their original
+papers target decoder-generation or decoder-layer pruning settings,
+respectively.
 
-The benchmark is intentionally separate from training:
+The harness reports accuracy, executed-layer counts, batch-one latency, and
+batch-32 throughput separately. The DeiT benchmark requires the server-side
+model and ImageNet split files. Parquet I/O, model loading, and calibration are
+outside GPU-forward timing.
 
-```bash
-python benchmark_interaction_multibudget_deit.py \
-  --checkpoint checkpoints_shared_4_6_7/shared_interaction_router.pt \
-  --eval_csv /path/to/test.csv --target_layers 4 6 7 \
-  --batch_size 32 --warmup 1 --repeats 3 \
-  --output_dir results_shared_4_6_7/gpu_forward_benchmark
-```
+## Reproducibility boundaries
 
-Required model weights and parquet data are intentionally not included. They
-must be supplied locally or on the server.
+- Model checkpoints, model weights, and parquet data are not included.
+- DistilBERT uses the locally supplied model and the GLUE/SST-2 validation
+  split with 872 examples.
+- DeiT results use the stated 40K/5K project split and should be reported as a
+  pilot/subset protocol, not as full ImageNet-1K validation.
+- GPU-forward timing, batch-one latency, batch-32 throughput, and
+  input-inclusive end-to-end serving time are different metrics. This artifact
+  does not establish a full serving speedup including data loading.
+- The experiments do not establish that route collapse is solved. The DeiT
+  evidence supports only conditional mitigation under the reported fixed-
+  adapter comparisons.
+- The original ASTER paper reports additional ViT-Base/ImageNet and
+  Llama-3.1-8B/BoolQ configurations. Corresponding implementations were not
+  available in the inspected code snapshot and are not claimed here.
 
-## Limitations
+## Running experiments
 
-The reported runs do not establish that route collapse is solved, nor do they
-establish an end-to-end speedup including data loading. Please preserve the
-protocol and metric boundaries when extending the experiments.
+The shell scripts document the server paths and expected checkpoint arguments.
+Before running them, edit the root, model, split, and checkpoint paths for the
+local environment. The required data and weights must be supplied separately.
+
+The saved CSV and Markdown reports are evidence snapshots from the completed
+runs; they are not model checkpoints.
+
+## Citation
+
+If you use this artifact, cite the accompanying paper and reference the
+anonymous repository URL supplied with the paper submission.
