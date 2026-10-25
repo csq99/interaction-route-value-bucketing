@@ -52,6 +52,10 @@ experiment logs. They are evidence snapshots, not model checkpoints.
   across multiple budgets and timing reports.
 - `aster-bert-random-route-adapter-ablation/`: DistilBERT adapter route-sampling
   ablation and its formal CSV/Markdown summaries.
+- `aster-baseline-methods-comparison-run/`: five-method classification
+  comparison harness and compact DistilBERT/DeiT evidence tables. The
+  SkipDecode and ShortGPT entries are explicitly labelled classification
+  transfer proxies.
 
 - `aster-deit-interaction-route-value-run/`: single-budget pilot router.
 - `aster-deit-interaction-multibudget-run/`: shared adapter/router across
